@@ -64,6 +64,11 @@ sge_followup_variant_a/
 ├── .env.example                        # Template for environment variables
 ├── .gitignore                          # Excludes weights (*.safetensors), runs, and .env
 │
+├── docs/                               # Research Papers & Theoretical Proposals
+│   ├── sge_goal_research_paper.md      # Full Markdown conversion of original SGE-Goal paper
+│   ├── SGE-Goal_Follow-up_Research_Proposal_V2.md # Follow-up proposal & Variant A spec
+│   └── documentation.md                # Repository codebase documentation
+│
 ├── checkpoints/                        # Model Checkpoint Management
 │   ├── README.md                       # Checkpoint documentation
 │   ├── sync_checkpoints.sh             # 1-command sync (Hugging Face <-> Modal Volume)
