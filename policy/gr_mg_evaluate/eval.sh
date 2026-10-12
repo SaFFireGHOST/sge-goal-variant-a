@@ -22,11 +22,11 @@ cd "$(dirname "$0")/.."
 # -----------------------------------------------------------------------------
 # Required user paths — EDIT THESE.
 # -----------------------------------------------------------------------------
-# Path to the CALVIN dataset split. Use task_D_D for the CALVIN-D test set.
-export DATASET_PATH="${DATASET_PATH:-/PATH/TO/calvin/dataset/task_D_D}"
+# Path to the CALVIN dataset split. (Defaults to Modal volume mount /data/task_D_D)
+export DATASET_PATH="${DATASET_PATH:-/data/task_D_D}"
 
 # Directory containing the GR-MG policy ckpt (e.g. epoch=47-step=83712.ckpt).
-export CKPT_DIR="${CKPT_DIR:-/PATH/TO/gr_mg_policy_ckpt_dir}"
+export CKPT_DIR="${CKPT_DIR:-/ckpts/gr_mg}"
 
 # Which checkpoint epoch to load.
 export EPOCHS=("${EPOCHS[@]:-47}")
@@ -39,8 +39,8 @@ export EPOCHS=("${EPOCHS[@]:-47}")
 #                                 images. Requires GOAL_IMAGES_MANIFEST to be set.
 # -----------------------------------------------------------------------------
 export GOAL_IMAGE_SOURCE="${GOAL_IMAGE_SOURCE:-manifest}"
-export SD_CKPT="${SD_CKPT:-/PATH/TO/goal_gen.ckpt}"
-export GOAL_IMAGES_MANIFEST="${GOAL_IMAGES_MANIFEST:-/PATH/TO/goal_images_manifest.json}"
+export SD_CKPT="${SD_CKPT:-/ckpts/goal_gen.ckpt}"
+export GOAL_IMAGES_MANIFEST="${GOAL_IMAGES_MANIFEST:-/runs/hf_calvin_mapping.json}"
 
 # Tag appended to the output dir, lets you keep multiple goal-image sources
 # side-by-side (e.g. "gt_final", "ip2p_edited", "magicbrush_edited").

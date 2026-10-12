@@ -234,15 +234,35 @@ def _enter_workspace_with_calvin_conf():
     if not policy_link.exists() and (Path(WORKSPACE) / "gr_mg_policy").exists():
         os.symlink(Path(WORKSPACE) / "gr_mg_policy", policy_link)
 
+    # Ensure policy ckpt & LoRA compatibility symlinks exist inside /ckpts volume if mounted
+    if os.path.exists(CKPT_MOUNT):
+        gr_mg_ckpt = Path(CKPT_MOUNT) / "gr_mg/epoch=47-step=83712.ckpt"
+        calvin_legacy_link = Path(CKPT_MOUNT) / "calvin_gr_mg_policy.pth"
+        if gr_mg_ckpt.exists() and not calvin_legacy_link.exists():
+            try:
+                os.symlink(gr_mg_ckpt, calvin_legacy_link)
+            except OSError:
+                pass
+
+        for lora_name in ["calvin-fer-mask-prediction.safetensors", "calvin-image-editing.safetensors"]:
+            nested_lora = Path(CKPT_MOUNT) / "ckpts" / lora_name
+            root_lora = Path(CKPT_MOUNT) / lora_name
+            if nested_lora.exists() and not root_lora.exists():
+                try:
+                    os.symlink(nested_lora, root_lora)
+                except OSError:
+                    pass
+
 
 def _run(cmd: list, env=None) -> int:
     import subprocess
 
     print("[modal] $", " ".join(cmd), flush=True)
     full_env = os.environ.copy()
-    # Ensure workspace is on PYTHONPATH so `policy`, `evaluate`, etc. are importable.
+    # Ensure workspace and evaluate submodules are on PYTHONPATH
     pp = full_env.get("PYTHONPATH", "")
-    full_env["PYTHONPATH"] = f"{WORKSPACE}:{pp}" if pp else WORKSPACE
+    eval_paths = f"{WORKSPACE}:{WORKSPACE}/evaluate:{WORKSPACE}/gr_mg_evaluate"
+    full_env["PYTHONPATH"] = f"{eval_paths}:{pp}" if pp else eval_paths
     if env:
         full_env.update(env)
     return subprocess.call(cmd, env=full_env)

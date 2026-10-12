@@ -45,8 +45,8 @@ def parse_args():
     parser.add_argument("--pretrained_model_name_or_path", type=str, default="black-forest-labs/FLUX.1-Kontext-dev")
     parser.add_argument("--generator_lora_checkpoint", type=str, default=None,
                         help="Path to initial pre-trained LoRA weights (e.g. Step 3 checkpoint)")
-    parser.add_argument("--policy_checkpoint_path", type=str, required=True,
-                        help="Path to pre-trained frozen GR-MG policy weights (.pt/.pth)")
+    parser.add_argument("--policy_checkpoint_path", type=str, default="/ckpts/gr_mg/epoch=47-step=83712.ckpt",
+                        help="Path to pre-trained frozen GR-MG policy weights (.ckpt/.pt/.pth)")
     parser.add_argument("--dataset_name", type=str, default="SuyashAjitChavan2002/Calvin-Dataset-Final")
     parser.add_argument("--output_dir", type=str, default="./outputs/variant_a_dense")
     parser.add_argument("--resolution", type=int, default=256)
@@ -123,6 +123,12 @@ def main():
 
     os.makedirs(args.output_dir, exist_ok=True)
     logger.info(f"Initialized Stage A1 Dense Behavioral Matching Training.")
+    # Resolve policy checkpoint path robustly
+    for p in [args.policy_checkpoint_path, "/ckpts/gr_mg/epoch=47-step=83712.ckpt", "/ckpts/calvin_gr_mg_policy.pth"]:
+        if p and os.path.exists(p):
+            args.policy_checkpoint_path = p
+            break
+
     logger.info(f"Target Policy: {args.policy_checkpoint_path} | Lambda beh: {args.lambda_beh}")
 
     # 1. Dataset & DataLoader

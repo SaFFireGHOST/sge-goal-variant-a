@@ -38,9 +38,9 @@ def parse_args():
     parser.add_argument("--ks", type=int, default=2, help="Number of environment seeds per goal image")
     parser.add_argument("--num_tasks", type=int, default=200, help="Number of CALVIN validation tasks to sample")
     parser.add_argument("--output_dir", type=str, default="./outputs/factorial_rollouts")
-    parser.add_argument("--step2_lora_path", type=str, default="../checkpoints/calvin-fer-mask-prediction/pytorch_lora_weights.safetensors")
-    parser.add_argument("--step3_lora_path", type=str, default="../checkpoints/calvin-image-editing/pytorch_lora_weights.safetensors")
-    parser.add_argument("--policy_ckpt_path", type=str, default="/ckpts/calvin_gr_mg_policy.pth")
+    parser.add_argument("--step2_lora_path", type=str, default="/ckpts/ckpts/calvin-fer-mask-prediction.safetensors")
+    parser.add_argument("--step3_lora_path", type=str, default="/ckpts/ckpts/calvin-image-editing.safetensors")
+    parser.add_argument("--policy_ckpt_path", type=str, default="/ckpts/gr_mg/epoch=47-step=83712.ckpt")
     return parser.parse_args()
 
 
@@ -58,6 +58,42 @@ def simulate_rollout_reward(mask_idx: int, appearance_idx: int, env_seed: int, t
 def main():
     args = parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
+
+    # Robust multi-environment path resolution
+    repo_root = Path(__file__).resolve().parent.parent
+    step2_candidates = [
+        args.step2_lora_path,
+        "/ckpts/ckpts/calvin-fer-mask-prediction.safetensors",
+        "/ckpts/calvin-fer-mask-prediction.safetensors",
+        str(repo_root / "checkpoints/calvin-fer-mask-prediction/pytorch_lora_weights.safetensors"),
+        "../checkpoints/calvin-fer-mask-prediction/pytorch_lora_weights.safetensors",
+    ]
+    for p in step2_candidates:
+        if p and os.path.exists(p):
+            args.step2_lora_path = p
+            break
+
+    step3_candidates = [
+        args.step3_lora_path,
+        "/ckpts/ckpts/calvin-image-editing.safetensors",
+        "/ckpts/calvin-image-editing.safetensors",
+        str(repo_root / "checkpoints/calvin-image-editing/pytorch_lora_weights.safetensors"),
+        "../checkpoints/calvin-image-editing/pytorch_lora_weights.safetensors",
+    ]
+    for p in step3_candidates:
+        if p and os.path.exists(p):
+            args.step3_lora_path = p
+            break
+
+    policy_candidates = [
+        args.policy_ckpt_path,
+        "/ckpts/gr_mg/epoch=47-step=83712.ckpt",
+        "/ckpts/calvin_gr_mg_policy.pth",
+    ]
+    for p in policy_candidates:
+        if p and os.path.exists(p):
+            args.policy_ckpt_path = p
+            break
     logger.info(f"Starting Factorial Rollout Sampling: K_m={args.km}, K_a={args.ka}, K_s={args.ks}")
     logger.info(f"Step 2 LoRA: {args.step2_lora_path}")
     logger.info(f"Step 3 LoRA: {args.step3_lora_path}")

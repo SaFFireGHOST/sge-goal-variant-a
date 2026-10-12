@@ -38,13 +38,30 @@ GEN_CONFIG = dict(do_sample=False, temperature=0.0, max_new_tokens=100, top_p=0.
 # -------------------------
 # Helpers
 # -------------------------
+def resolve_image_path(p: str) -> str:
+    if os.path.exists(p):
+        return p
+    candidates = [
+        os.path.join(os.path.dirname(__file__), p),
+        os.path.join(os.path.dirname(__file__), "lgie-eval-data", os.path.basename(p)),
+        os.path.join("/home/sgeextn/SGE-Goal-Cleaned/SGE-Goal-Evaluator", p),
+        os.path.join("/home/sgeextn/SGE-Goal-Cleaned/SGE-Goal-Evaluator/lgie-eval-data", os.path.basename(p)),
+    ]
+    for c in candidates:
+        if os.path.exists(c):
+            return c
+    return p
+
+
 def two_images_to_video(img1_path: str, img2_path: str, out_path: str, fps: int = 1) -> str:
-    img1 = cv2.imread(img1_path)
-    img2 = cv2.imread(img2_path)
+    img1_resolved = resolve_image_path(img1_path)
+    img2_resolved = resolve_image_path(img2_path)
+    img1 = cv2.imread(img1_resolved)
+    img2 = cv2.imread(img2_resolved)
     if img1 is None:
-        raise ValueError(f"Could not read image: {img1_path}")
+        raise ValueError(f"Could not read image: {img1_path} (resolved: {img1_resolved})")
     if img2 is None:
-        raise ValueError(f"Could not read image: {img2_path}")
+        raise ValueError(f"Could not read image: {img2_path} (resolved: {img2_resolved})")
 
     h, w = img1.shape[:2]
     if img2.shape[:2] != (h, w):

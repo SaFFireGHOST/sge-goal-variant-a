@@ -15,7 +15,11 @@ Usage:
     modal run modal_flux_kontext_train.py --action download
 """
 
+import os
+from pathlib import Path
 import modal
+
+LOCAL_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # ============================================================================
 # GPU Configuration - Adjust these variables for your needs
@@ -148,7 +152,7 @@ image = (
     )
     # Add the flux_finetuning directory
     .add_local_dir(
-        ".",  # Current directory (flux_finetuning)
+        LOCAL_DIR,
         remote_path="/root/flux_finetuning",
         ignore=[
             "*.git*",

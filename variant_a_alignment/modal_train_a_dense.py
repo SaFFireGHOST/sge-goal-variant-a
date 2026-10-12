@@ -78,7 +78,7 @@ def run_stage_a_dense_training():
         sys.executable,
         "/workspace/train_a_dense.py",
         "--pretrained_model_name_or_path", "black-forest-labs/FLUX.1-Kontext-dev",
-        "--policy_checkpoint_path", "/ckpts/calvin_gr_mg_policy.pth",
+        "--policy_checkpoint_path", "/ckpts/gr_mg/epoch=47-step=83712.ckpt",
         "--dataset_name", "SuyashAjitChavan2002/Calvin-Dataset-Final",
         "--output_dir", output_dir,
         "--lambda_beh", "1.5",
