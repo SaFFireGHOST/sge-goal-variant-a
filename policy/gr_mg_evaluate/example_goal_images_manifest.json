@@ -1,0 +1,9 @@
+{
+  "_comment": "Example goal-image manifest for `python evaluate/eval.py --goal_image_source manifest --goal_images_manifest <this-file>`. Keys are '<sequence_idx>_<subtask_idx>' identifying each test sample in the CALVIN long-horizon evaluation enumerated by calvin_agent.evaluation.multistep_sequences.get_sequences(num_sequences). Values are PNG/JPG paths (absolute or relative to this file). Every test sample you intend to evaluate MUST have an entry. Images are auto-resized to 200x200 (CALVIN static-cam shape).",
+  "0_0": "goals/seq0_sub0.png",
+  "0_1": "goals/seq0_sub1.png",
+  "0_2": "goals/seq0_sub2.png",
+  "0_3": "goals/seq0_sub3.png",
+  "0_4": "goals/seq0_sub4.png",
+  "1_0": "goals/seq1_sub0.png"
+}

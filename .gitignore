@@ -1,0 +1,40 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment & IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Experiment runs, logs, and generated artifacts
+outputs/
+runs/
+eval-logs/
+*.log
+nohup.out
+
+# Large model weights & checkpoints (Host on Modal Volume or Hugging Face Hub)
+*.safetensors
+*.pt
+*.pth
+*.bin
+*.ckpt
+*.onnx
+
+# Heavy dataset files if downloaded locally
+*.h5
+*.hdf5
+*.tar
+*.tar.gz

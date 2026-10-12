@@ -1,0 +1,16 @@
+accelerate
+diffusers
+huggingface-hub
+numpy
+peft
+Pillow
+torch
+torchvision
+tqdm
+transformers
+datasets
+wandb            # Optional: used if is_wandb_available() returns True
+bitsandbytes     # Optional: used if --use_8bit_adam is enabled
+prodigyopt       # Optional: used when optimizer is set to "prodigy"
+scikit-image
+lpips
