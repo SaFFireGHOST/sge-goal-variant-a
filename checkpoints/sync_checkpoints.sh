@@ -14,13 +14,16 @@ else
     MODAL_CMD="python3 -m modal"
 fi
 
+DEFAULT_HF_REPO="SaFFire/sge-goal"
+
 usage() {
-    echo "Usage: $0 [--push-modal | --pull-modal | --push-hf <repo_id>]"
+    echo "Usage: $0 [--push-modal | --pull-modal | --push-hf <repo_id> | --pull-hf [repo_id]]"
     echo ""
     echo "Options:"
     echo "  --push-modal           Upload local checkpoints to Modal volume 'rm-policy-ckpts'"
     echo "  --pull-modal           Download checkpoints from Modal volume 'rm-policy-ckpts'"
     echo "  --push-hf <repo_id>    Upload checkpoints to Hugging Face Model Hub"
+    echo "  --pull-hf [repo_id]    Download checkpoints from Hugging Face Model Hub (default: $DEFAULT_HF_REPO)"
     exit 1
 }
 
@@ -41,13 +44,16 @@ elif [ "$1" == "--pull-modal" ]; then
     echo "==> Done pulling from Modal volume."
 
 elif [ "$1" == "--push-hf" ]; then
-    if [ -z "$2" ]; then
-        echo "Error: please provide a Hugging Face repository ID, e.g., username/sge-calvin-lora"
-        exit 1
-    fi
-    echo "==> Uploading to Hugging Face repository $2..."
-    huggingface-cli upload "$2" .
+    TARGET_REPO="${2:-$DEFAULT_HF_REPO}"
+    echo "==> Uploading to Hugging Face repository $TARGET_REPO..."
+    python3 upload_to_hf.py --repo-id "$TARGET_REPO"
     echo "==> Done uploading to Hugging Face."
+
+elif [ "$1" == "--pull-hf" ]; then
+    TARGET_REPO="${2:-$DEFAULT_HF_REPO}"
+    echo "==> Pulling checkpoints from Hugging Face model repository $TARGET_REPO..."
+    python3 -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='$TARGET_REPO', local_dir='.')"
+    echo "==> Done pulling from Hugging Face."
 
 else
     usage
