@@ -10,6 +10,7 @@ Usage:
 from __future__ import annotations
 
 import os
+from pathlib import Path
 import subprocess
 import sys
 import modal
@@ -28,6 +29,7 @@ VOLUMES = {
 }
 
 app = modal.App(name=APP_NAME)
+current_dir = Path(__file__).parent.resolve()
 
 image = (
     modal.Image.debian_slim(python_version="3.10")
@@ -40,6 +42,11 @@ image = (
         "numpy",
         "pillow",
         "tqdm",
+    )
+    .add_local_dir(
+        str(current_dir),
+        remote_path="/workspace",
+        ignore=["*.git*", "__pycache__", "*.pyc", "*.safetensors", "*.pt", "*.pth", "*.bin"],
     )
 )
 
