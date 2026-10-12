@@ -227,6 +227,12 @@ def _enter_workspace_with_calvin_conf():
     link = Path(WORKSPACE) / "calvin"
     if not link.exists():
         os.symlink(CALVIN_REPO, link)
+    eval_link = Path(WORKSPACE) / "evaluate"
+    if not eval_link.exists() and (Path(WORKSPACE) / "gr_mg_evaluate").exists():
+        os.symlink(Path(WORKSPACE) / "gr_mg_evaluate", eval_link)
+    policy_link = Path(WORKSPACE) / "policy"
+    if not policy_link.exists() and (Path(WORKSPACE) / "gr_mg_policy").exists():
+        os.symlink(Path(WORKSPACE) / "gr_mg_policy", policy_link)
 
 
 def _run(cmd: list, env=None) -> int:
