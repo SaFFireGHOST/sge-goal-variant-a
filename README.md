@@ -120,8 +120,14 @@ bash sync_checkpoints.sh --push-modal
 ```
 
 ### Step 5.2: Stage A1 — Offline Dense Behavioral Matching Training
+Run in detached mode so remote execution survives local disconnects:
 ```bash
 cd ../variant_a_alignment
+
+# Detached background execution (Recommended):
+modal run --detach modal_train_a_dense.py
+
+# Or interactive foreground execution:
 modal run modal_train_a_dense.py
 ```
 - Provisions a serverless **Nvidia B200** GPU on Modal.
@@ -130,23 +136,43 @@ modal run modal_train_a_dense.py
 
 ### Step 5.3: Stage A2 — Advantage Preference Rollouts
 ```bash
-modal run modal_train_a_flow_dpo.py --action rollouts
+# Detached background execution:
+modal run --detach modal_train_a_flow_dpo.py --action rollouts
 ```
 Runs $K_m \times K_a \times K_s$ rollouts inside the remote CALVIN environment and exports preference datasets to `/runs/variant_a_rollouts/`.
 
 ### Step 5.4: Stage A2 — Continuous Flow-DPO Optimization
 ```bash
 # Fine-tune Step 3 (Appearance Completion LoRA)
-modal run modal_train_a_flow_dpo.py --action train --stage step3
+modal run --detach modal_train_a_flow_dpo.py --action train --stage step3
 
 # Fine-tune Step 2 (Mask Generation LoRA)
-modal run modal_train_a_flow_dpo.py --action train --stage step2
+modal run --detach modal_train_a_flow_dpo.py --action train --stage step2
 ```
 
-### Step 5.5: Final Benchmark Policy Evaluation (1,000 Chains)
+### Step 5.5: Benchmark Policy Evaluation on CALVIN
 ```bash
 cd ../policy
-modal run modal_calvin_eval.py::eval_calvin --manifest-path /runs/variant_a_goals.json
+
+# 1. Evaluate on Hugging Face Test Rows (using generated mapping):
+modal run --detach modal_calvin_eval.py::eval_hf
+
+# 2. Standard Long-Horizon Evaluation (1,000 Chains with goal manifest):
+modal run --detach modal_calvin_eval.py::eval_calvin --manifest-path /runs/variant_a_goals.json
+```
+
+### Step 5.6: Managing Detached Cloud Jobs
+When running with `--detach`, jobs execute independently on Modal infrastructure. Use these commands to monitor and manage them:
+
+```bash
+# List all active/detached cloud apps
+modal app list
+
+# Stream live terminal logs from a running app
+modal app logs <app-id>
+
+# Stop/terminate a running cloud app
+modal app stop <app-id>
 ```
 
 ---
