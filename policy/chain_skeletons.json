@@ -1,0 +1,1765 @@
+{
+  "max_gap": 200,
+  "num_clusters": 129,
+  "chain_skeletons": [
+    {
+      "chain_id": 0,
+      "length": 3,
+      "clusters": [
+        {
+          "cluster_idx": 0,
+          "task": "lift_pink_block_table",
+          "start_frame": 785,
+          "end_frame": 820,
+          "hf_rows": [
+            102,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            115,
+            117,
+            124
+          ]
+        },
+        {
+          "cluster_idx": 2,
+          "task": "turn_on_lightbulb",
+          "start_frame": 862,
+          "end_frame": 899,
+          "hf_rows": [
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            143,
+            144,
+            145,
+            147,
+            148,
+            150,
+            151
+          ]
+        },
+        {
+          "cluster_idx": 3,
+          "task": "lift_blue_block_table",
+          "start_frame": 985,
+          "end_frame": 1051,
+          "hf_rows": [
+            164,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            179,
+            180,
+            181
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 1,
+      "length": 3,
+      "clusters": [
+        {
+          "cluster_idx": 1,
+          "task": "place_in_slider",
+          "start_frame": 809,
+          "end_frame": 856,
+          "hf_rows": [
+            114,
+            116,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            125,
+            126,
+            142
+          ]
+        },
+        {
+          "cluster_idx": 2,
+          "task": "turn_on_lightbulb",
+          "start_frame": 862,
+          "end_frame": 899,
+          "hf_rows": [
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            143,
+            144,
+            145,
+            147,
+            148,
+            150,
+            151
+          ]
+        },
+        {
+          "cluster_idx": 3,
+          "task": "lift_blue_block_table",
+          "start_frame": 985,
+          "end_frame": 1051,
+          "hf_rows": [
+            164,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            179,
+            180,
+            181
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 2,
+      "length": 5,
+      "clusters": [
+        {
+          "cluster_idx": 5,
+          "task": "turn_on_led",
+          "start_frame": 1774,
+          "end_frame": 1840,
+          "hf_rows": [
+            278,
+            279,
+            280,
+            281,
+            282,
+            283,
+            284,
+            285,
+            286,
+            288,
+            289,
+            290,
+            291,
+            292,
+            293
+          ]
+        },
+        {
+          "cluster_idx": 6,
+          "task": "turn_on_lightbulb",
+          "start_frame": 1963,
+          "end_frame": 2027,
+          "hf_rows": [
+            304,
+            306,
+            308,
+            309,
+            310,
+            311,
+            312,
+            313,
+            314,
+            315,
+            317,
+            323,
+            324,
+            326,
+            327
+          ]
+        },
+        {
+          "cluster_idx": 7,
+          "task": "lift_blue_block_drawer",
+          "start_frame": 2136,
+          "end_frame": 2200,
+          "hf_rows": [
+            318,
+            319,
+            320,
+            322,
+            325,
+            328,
+            329,
+            330,
+            331,
+            333,
+            336
+          ]
+        },
+        {
+          "cluster_idx": 8,
+          "task": "place_in_slider",
+          "start_frame": 2202,
+          "end_frame": 2266,
+          "hf_rows": [
+            332,
+            334,
+            335,
+            337,
+            338,
+            339,
+            340,
+            341,
+            342,
+            343,
+            344,
+            345,
+            346,
+            347,
+            348,
+            349,
+            350,
+            351,
+            353
+          ]
+        },
+        {
+          "cluster_idx": 9,
+          "task": "push_red_block_right",
+          "start_frame": 2351,
+          "end_frame": 2423,
+          "hf_rows": [
+            357,
+            361,
+            364,
+            365,
+            366,
+            367,
+            368,
+            369,
+            370,
+            371,
+            372,
+            373,
+            374,
+            375,
+            376,
+            377,
+            378,
+            379,
+            380,
+            381,
+            386,
+            391,
+            392,
+            395,
+            396
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 3,
+      "length": 9,
+      "clusters": [
+        {
+          "cluster_idx": 10,
+          "task": "lift_pink_block_drawer",
+          "start_frame": 2626,
+          "end_frame": 2690,
+          "hf_rows": [
+            382,
+            383,
+            385,
+            388,
+            389
+          ]
+        },
+        {
+          "cluster_idx": 11,
+          "task": "lift_red_block_table",
+          "start_frame": 2787,
+          "end_frame": 2871,
+          "hf_rows": [
+            400,
+            401,
+            402,
+            403,
+            404,
+            405,
+            407,
+            408,
+            409,
+            411,
+            412,
+            413,
+            418,
+            419,
+            426,
+            429,
+            430,
+            431,
+            432,
+            437
+          ]
+        },
+        {
+          "cluster_idx": 12,
+          "task": "rotate_pink_block_left",
+          "start_frame": 3062,
+          "end_frame": 3126,
+          "hf_rows": [
+            410,
+            414,
+            415,
+            416,
+            417,
+            420,
+            421,
+            422,
+            433
+          ]
+        },
+        {
+          "cluster_idx": 13,
+          "task": "lift_red_block_table",
+          "start_frame": 3192,
+          "end_frame": 3236,
+          "hf_rows": [
+            434,
+            435,
+            436,
+            438,
+            439,
+            441,
+            442,
+            443,
+            444,
+            445,
+            446,
+            447,
+            448,
+            449,
+            450,
+            451,
+            452,
+            453,
+            454,
+            455,
+            456,
+            457
+          ]
+        },
+        {
+          "cluster_idx": 15,
+          "task": "stack_block",
+          "start_frame": 3359,
+          "end_frame": 3404,
+          "hf_rows": [
+            494,
+            496,
+            499,
+            500,
+            501,
+            502,
+            504,
+            506,
+            509,
+            510,
+            512,
+            520,
+            521,
+            526
+          ]
+        },
+        {
+          "cluster_idx": 16,
+          "task": "unstack_block",
+          "start_frame": 3405,
+          "end_frame": 3444,
+          "hf_rows": [
+            471,
+            472,
+            474,
+            477,
+            478,
+            479,
+            484,
+            485,
+            486,
+            489,
+            490,
+            491,
+            492,
+            493,
+            495,
+            497,
+            498,
+            503,
+            505,
+            507,
+            508,
+            511,
+            513,
+            514,
+            515,
+            516,
+            517,
+            518,
+            523,
+            528,
+            539,
+            547,
+            599
+          ]
+        },
+        {
+          "cluster_idx": 17,
+          "task": "lift_pink_block_table",
+          "start_frame": 3478,
+          "end_frame": 3542,
+          "hf_rows": [
+            519,
+            522,
+            524,
+            525,
+            527,
+            529,
+            530,
+            531,
+            533,
+            535,
+            542,
+            550,
+            551,
+            597,
+            598
+          ]
+        },
+        {
+          "cluster_idx": 18,
+          "task": "move_slider_right",
+          "start_frame": 3561,
+          "end_frame": 3633,
+          "hf_rows": [
+            536,
+            538,
+            540,
+            541,
+            543,
+            544,
+            545,
+            546,
+            548,
+            549,
+            552,
+            553,
+            554,
+            555,
+            566,
+            570
+          ]
+        },
+        {
+          "cluster_idx": 19,
+          "task": "lift_blue_block_table",
+          "start_frame": 3650,
+          "end_frame": 3715,
+          "hf_rows": [
+            556,
+            557,
+            558,
+            559,
+            560,
+            561,
+            562,
+            563,
+            564,
+            565,
+            568,
+            569,
+            572,
+            576,
+            581
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 4,
+      "length": 6,
+      "clusters": [
+        {
+          "cluster_idx": 14,
+          "task": "stack_block",
+          "start_frame": 3230,
+          "end_frame": 3273,
+          "hf_rows": [
+            458,
+            459,
+            460,
+            461,
+            462,
+            463,
+            464,
+            465,
+            466,
+            467,
+            468,
+            469,
+            470,
+            473,
+            475,
+            476,
+            481
+          ]
+        },
+        {
+          "cluster_idx": 15,
+          "task": "stack_block",
+          "start_frame": 3359,
+          "end_frame": 3404,
+          "hf_rows": [
+            494,
+            496,
+            499,
+            500,
+            501,
+            502,
+            504,
+            506,
+            509,
+            510,
+            512,
+            520,
+            521,
+            526
+          ]
+        },
+        {
+          "cluster_idx": 16,
+          "task": "unstack_block",
+          "start_frame": 3405,
+          "end_frame": 3444,
+          "hf_rows": [
+            471,
+            472,
+            474,
+            477,
+            478,
+            479,
+            484,
+            485,
+            486,
+            489,
+            490,
+            491,
+            492,
+            493,
+            495,
+            497,
+            498,
+            503,
+            505,
+            507,
+            508,
+            511,
+            513,
+            514,
+            515,
+            516,
+            517,
+            518,
+            523,
+            528,
+            539,
+            547,
+            599
+          ]
+        },
+        {
+          "cluster_idx": 17,
+          "task": "lift_pink_block_table",
+          "start_frame": 3478,
+          "end_frame": 3542,
+          "hf_rows": [
+            519,
+            522,
+            524,
+            525,
+            527,
+            529,
+            530,
+            531,
+            533,
+            535,
+            542,
+            550,
+            551,
+            597,
+            598
+          ]
+        },
+        {
+          "cluster_idx": 18,
+          "task": "move_slider_right",
+          "start_frame": 3561,
+          "end_frame": 3633,
+          "hf_rows": [
+            536,
+            538,
+            540,
+            541,
+            543,
+            544,
+            545,
+            546,
+            548,
+            549,
+            552,
+            553,
+            554,
+            555,
+            566,
+            570
+          ]
+        },
+        {
+          "cluster_idx": 19,
+          "task": "lift_blue_block_table",
+          "start_frame": 3650,
+          "end_frame": 3715,
+          "hf_rows": [
+            556,
+            557,
+            558,
+            559,
+            560,
+            561,
+            562,
+            563,
+            564,
+            565,
+            568,
+            569,
+            572,
+            576,
+            581
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 5,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 23,
+          "task": "lift_blue_block_drawer",
+          "start_frame": 5149,
+          "end_frame": 5219,
+          "hf_rows": [
+            602,
+            603,
+            604,
+            605,
+            608,
+            609,
+            610,
+            612,
+            614,
+            616,
+            620,
+            623,
+            627,
+            633,
+            643
+          ]
+        },
+        {
+          "cluster_idx": 24,
+          "task": "lift_red_block_drawer",
+          "start_frame": 5243,
+          "end_frame": 5307,
+          "hf_rows": [
+            613,
+            615,
+            618,
+            619,
+            621,
+            624,
+            625,
+            628,
+            629,
+            631,
+            632,
+            634,
+            636,
+            637,
+            639,
+            640,
+            641,
+            642,
+            644,
+            645,
+            647,
+            651
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 6,
+      "length": 9,
+      "clusters": [
+        {
+          "cluster_idx": 28,
+          "task": "lift_pink_block_drawer",
+          "start_frame": 7749,
+          "end_frame": 7813,
+          "hf_rows": [
+            662,
+            663,
+            664,
+            665,
+            666,
+            667,
+            668,
+            670,
+            671,
+            674
+          ]
+        },
+        {
+          "cluster_idx": 29,
+          "task": "lift_pink_block_table",
+          "start_frame": 7963,
+          "end_frame": 8062,
+          "hf_rows": [
+            675,
+            676,
+            677,
+            679,
+            680,
+            681,
+            682,
+            683,
+            684,
+            686
+          ]
+        },
+        {
+          "cluster_idx": 30,
+          "task": "rotate_red_block_left",
+          "start_frame": 8126,
+          "end_frame": 8190,
+          "hf_rows": [
+            685,
+            688,
+            689
+          ]
+        },
+        {
+          "cluster_idx": 31,
+          "task": "rotate_red_block_left",
+          "start_frame": 8210,
+          "end_frame": 8275,
+          "hf_rows": [
+            700,
+            701,
+            703,
+            708,
+            709,
+            722,
+            725
+          ]
+        },
+        {
+          "cluster_idx": 32,
+          "task": "lift_red_block_table",
+          "start_frame": 8294,
+          "end_frame": 8374,
+          "hf_rows": [
+            393,
+            687,
+            690,
+            691,
+            692,
+            693,
+            695,
+            696,
+            704,
+            706,
+            707,
+            711,
+            713,
+            714,
+            716,
+            718
+          ]
+        },
+        {
+          "cluster_idx": 33,
+          "task": "rotate_blue_block_right",
+          "start_frame": 8422,
+          "end_frame": 8486,
+          "hf_rows": [
+            715,
+            717,
+            719,
+            720,
+            723,
+            724,
+            726,
+            735
+          ]
+        },
+        {
+          "cluster_idx": 34,
+          "task": "rotate_blue_block_right",
+          "start_frame": 8506,
+          "end_frame": 8571,
+          "hf_rows": [
+            732,
+            733,
+            734,
+            736,
+            737,
+            738,
+            741,
+            744,
+            746
+          ]
+        },
+        {
+          "cluster_idx": 35,
+          "task": "stack_block",
+          "start_frame": 8643,
+          "end_frame": 8677,
+          "hf_rows": [
+            694,
+            697,
+            699,
+            702,
+            705,
+            710
+          ]
+        },
+        {
+          "cluster_idx": 37,
+          "task": "rotate_pink_block_right",
+          "start_frame": 8790,
+          "end_frame": 8854,
+          "hf_rows": [
+            745,
+            748,
+            749,
+            750,
+            751,
+            752,
+            753,
+            754,
+            755,
+            758
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 7,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 36,
+          "task": "unstack_block",
+          "start_frame": 8662,
+          "end_frame": 8726,
+          "hf_rows": [
+            698,
+            712
+          ]
+        },
+        {
+          "cluster_idx": 37,
+          "task": "rotate_pink_block_right",
+          "start_frame": 8790,
+          "end_frame": 8854,
+          "hf_rows": [
+            745,
+            748,
+            749,
+            750,
+            751,
+            752,
+            753,
+            754,
+            755,
+            758
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 8,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 40,
+          "task": "push_into_drawer",
+          "start_frame": 11301,
+          "end_frame": 11365,
+          "hf_rows": [
+            769,
+            771,
+            772,
+            773,
+            775,
+            776,
+            777,
+            778,
+            779,
+            780,
+            781,
+            782,
+            783,
+            784,
+            785
+          ]
+        },
+        {
+          "cluster_idx": 42,
+          "task": "close_drawer",
+          "start_frame": 11439,
+          "end_frame": 11503,
+          "hf_rows": [
+            100,
+            101,
+            103,
+            105
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 9,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 41,
+          "task": "push_into_drawer",
+          "start_frame": 11363,
+          "end_frame": 11427,
+          "hf_rows": [
+            787,
+            788,
+            789,
+            790,
+            791,
+            792,
+            793,
+            794,
+            795,
+            796,
+            797,
+            798,
+            799,
+            800,
+            805
+          ]
+        },
+        {
+          "cluster_idx": 42,
+          "task": "close_drawer",
+          "start_frame": 11439,
+          "end_frame": 11503,
+          "hf_rows": [
+            100,
+            101,
+            103,
+            105
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 10,
+      "length": 3,
+      "clusters": [
+        {
+          "cluster_idx": 44,
+          "task": "move_slider_left",
+          "start_frame": 12893,
+          "end_frame": 12957,
+          "hf_rows": [
+            802,
+            807,
+            823
+          ]
+        },
+        {
+          "cluster_idx": 45,
+          "task": "rotate_red_block_right",
+          "start_frame": 12983,
+          "end_frame": 13047,
+          "hf_rows": [
+            801,
+            809,
+            810,
+            817
+          ]
+        },
+        {
+          "cluster_idx": 46,
+          "task": "lift_pink_block_table",
+          "start_frame": 13088,
+          "end_frame": 13152,
+          "hf_rows": [
+            813,
+            814,
+            818,
+            819,
+            826
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 11,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 48,
+          "task": "push_into_drawer",
+          "start_frame": 14248,
+          "end_frame": 14312,
+          "hf_rows": [
+            202
+          ]
+        },
+        {
+          "cluster_idx": 49,
+          "task": "close_drawer",
+          "start_frame": 14316,
+          "end_frame": 14354,
+          "hf_rows": [
+            259,
+            262,
+            265,
+            266,
+            268
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 12,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 51,
+          "task": "lift_blue_block_table",
+          "start_frame": 18702,
+          "end_frame": 18773,
+          "hf_rows": [
+            534,
+            833,
+            834,
+            836,
+            839,
+            840,
+            845,
+            846,
+            849,
+            853,
+            861
+          ]
+        },
+        {
+          "cluster_idx": 52,
+          "task": "rotate_blue_block_right",
+          "start_frame": 18799,
+          "end_frame": 18869,
+          "hf_rows": [
+            842,
+            844,
+            847,
+            848,
+            850,
+            851,
+            856,
+            877,
+            886,
+            897
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 13,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 54,
+          "task": "turn_off_led",
+          "start_frame": 20455,
+          "end_frame": 20519,
+          "hf_rows": [
+            156,
+            163
+          ]
+        },
+        {
+          "cluster_idx": 55,
+          "task": "open_drawer",
+          "start_frame": 20520,
+          "end_frame": 20584,
+          "hf_rows": [
+            178,
+            182,
+            185
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 14,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 56,
+          "task": "lift_blue_block_slider",
+          "start_frame": 21169,
+          "end_frame": 21233,
+          "hf_rows": [
+            287,
+            294,
+            295,
+            296,
+            297,
+            298,
+            299,
+            300,
+            301,
+            302,
+            303,
+            305,
+            316,
+            321
+          ]
+        },
+        {
+          "cluster_idx": 57,
+          "task": "rotate_blue_block_left",
+          "start_frame": 21250,
+          "end_frame": 21320,
+          "hf_rows": [
+            867,
+            869,
+            871,
+            872,
+            873,
+            874,
+            875,
+            878,
+            881,
+            887
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 15,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 58,
+          "task": "push_blue_block_right",
+          "start_frame": 21577,
+          "end_frame": 21650,
+          "hf_rows": [
+            876,
+            880,
+            882,
+            883,
+            884,
+            885,
+            888,
+            889,
+            890,
+            891,
+            892,
+            893,
+            895,
+            896,
+            899
+          ]
+        },
+        {
+          "cluster_idx": 59,
+          "task": "push_blue_block_right",
+          "start_frame": 21652,
+          "end_frame": 21721,
+          "hf_rows": [
+            900,
+            902,
+            903,
+            905
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 16,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 62,
+          "task": "lift_blue_block_drawer",
+          "start_frame": 23288,
+          "end_frame": 23352,
+          "hf_rows": [
+            363
+          ]
+        },
+        {
+          "cluster_idx": 63,
+          "task": "lift_pink_block_drawer",
+          "start_frame": 23459,
+          "end_frame": 23523,
+          "hf_rows": [
+            352
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 17,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 68,
+          "task": "push_pink_block_left",
+          "start_frame": 34240,
+          "end_frame": 34314,
+          "hf_rows": [
+            943,
+            944,
+            946,
+            948,
+            952,
+            953,
+            954,
+            955,
+            956,
+            957,
+            958,
+            959,
+            960,
+            975,
+            977
+          ]
+        },
+        {
+          "cluster_idx": 70,
+          "task": "push_pink_block_right",
+          "start_frame": 34350,
+          "end_frame": 34414,
+          "hf_rows": [
+            962,
+            963,
+            964,
+            965,
+            966,
+            967,
+            968,
+            969,
+            970,
+            971,
+            972,
+            978,
+            982,
+            985,
+            986,
+            989
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 18,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 69,
+          "task": "push_pink_block_left",
+          "start_frame": 34294,
+          "end_frame": 34341,
+          "hf_rows": [
+            806,
+            822,
+            973
+          ]
+        },
+        {
+          "cluster_idx": 70,
+          "task": "push_pink_block_right",
+          "start_frame": 34350,
+          "end_frame": 34414,
+          "hf_rows": [
+            962,
+            963,
+            964,
+            965,
+            966,
+            967,
+            968,
+            969,
+            970,
+            971,
+            972,
+            978,
+            982,
+            985,
+            986,
+            989
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 19,
+      "length": 4,
+      "clusters": [
+        {
+          "cluster_idx": 78,
+          "task": "push_red_block_right",
+          "start_frame": 44758,
+          "end_frame": 44822,
+          "hf_rows": [
+            1043,
+            1045,
+            1050,
+            1051,
+            1055,
+            1065,
+            1068
+          ]
+        },
+        {
+          "cluster_idx": 79,
+          "task": "push_red_block_left",
+          "start_frame": 44984,
+          "end_frame": 45056,
+          "hf_rows": [
+            1056,
+            1057,
+            1058,
+            1059,
+            1062,
+            1063,
+            1064,
+            1070,
+            1073,
+            1077,
+            1080
+          ]
+        },
+        {
+          "cluster_idx": 81,
+          "task": "push_red_block_right",
+          "start_frame": 45116,
+          "end_frame": 45180,
+          "hf_rows": [
+            1066,
+            1072,
+            1079,
+            1082,
+            1085
+          ]
+        },
+        {
+          "cluster_idx": 82,
+          "task": "push_red_block_left",
+          "start_frame": 45202,
+          "end_frame": 45270,
+          "hf_rows": [
+            803,
+            804,
+            808,
+            812,
+            815,
+            825,
+            1049,
+            1052,
+            1053,
+            1061
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 20,
+      "length": 3,
+      "clusters": [
+        {
+          "cluster_idx": 80,
+          "task": "push_red_block_left",
+          "start_frame": 45029,
+          "end_frame": 45093,
+          "hf_rows": [
+            1071
+          ]
+        },
+        {
+          "cluster_idx": 81,
+          "task": "push_red_block_right",
+          "start_frame": 45116,
+          "end_frame": 45180,
+          "hf_rows": [
+            1066,
+            1072,
+            1079,
+            1082,
+            1085
+          ]
+        },
+        {
+          "cluster_idx": 82,
+          "task": "push_red_block_left",
+          "start_frame": 45202,
+          "end_frame": 45270,
+          "hf_rows": [
+            803,
+            804,
+            808,
+            812,
+            815,
+            825,
+            1049,
+            1052,
+            1053,
+            1061
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 21,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 94,
+          "task": "move_slider_left",
+          "start_frame": 231033,
+          "end_frame": 231097,
+          "hf_rows": [
+            307
+          ]
+        },
+        {
+          "cluster_idx": 95,
+          "task": "turn_off_led",
+          "start_frame": 231220,
+          "end_frame": 231284,
+          "hf_rows": [
+            146,
+            149,
+            152,
+            153,
+            154,
+            155,
+            157,
+            158,
+            160,
+            161
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 22,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 98,
+          "task": "open_drawer",
+          "start_frame": 235392,
+          "end_frame": 235456,
+          "hf_rows": [
+            193
+          ]
+        },
+        {
+          "cluster_idx": 99,
+          "task": "move_slider_right",
+          "start_frame": 235568,
+          "end_frame": 235632,
+          "hf_rows": [
+            248,
+            249,
+            250,
+            251,
+            254,
+            255,
+            257,
+            258
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 23,
+      "length": 3,
+      "clusters": [
+        {
+          "cluster_idx": 107,
+          "task": "lift_pink_block_slider",
+          "start_frame": 400412,
+          "end_frame": 400480,
+          "hf_rows": [
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            69,
+            71
+          ]
+        },
+        {
+          "cluster_idx": 108,
+          "task": "push_pink_block_right",
+          "start_frame": 400514,
+          "end_frame": 400560,
+          "hf_rows": [
+            1074,
+            1075,
+            1076,
+            1078,
+            1081,
+            1083,
+            1084,
+            1086
+          ]
+        },
+        {
+          "cluster_idx": 109,
+          "task": "turn_on_lightbulb",
+          "start_frame": 400567,
+          "end_frame": 400631,
+          "hf_rows": [
+            579,
+            583,
+            586,
+            587,
+            592,
+            595
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 24,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 110,
+          "task": "open_drawer",
+          "start_frame": 401884,
+          "end_frame": 401949,
+          "hf_rows": [
+            3,
+            4,
+            9,
+            10,
+            11,
+            16,
+            191,
+            192,
+            196,
+            197
+          ]
+        },
+        {
+          "cluster_idx": 111,
+          "task": "lift_red_block_drawer",
+          "start_frame": 402077,
+          "end_frame": 402141,
+          "hf_rows": [
+            573
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 25,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 116,
+          "task": "turn_on_led",
+          "start_frame": 409757,
+          "end_frame": 409792,
+          "hf_rows": [
+            27
+          ]
+        },
+        {
+          "cluster_idx": 117,
+          "task": "place_in_slider",
+          "start_frame": 409915,
+          "end_frame": 409961,
+          "hf_rows": [
+            68,
+            70,
+            72,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 26,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 118,
+          "task": "move_slider_left",
+          "start_frame": 410214,
+          "end_frame": 410278,
+          "hf_rows": [
+            37
+          ]
+        },
+        {
+          "cluster_idx": 119,
+          "task": "place_in_drawer",
+          "start_frame": 410377,
+          "end_frame": 410414,
+          "hf_rows": [
+            77,
+            79,
+            80,
+            81,
+            86
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 27,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 120,
+          "task": "lift_red_block_drawer",
+          "start_frame": 411582,
+          "end_frame": 411646,
+          "hf_rows": [
+            355,
+            356
+          ]
+        },
+        {
+          "cluster_idx": 121,
+          "task": "rotate_pink_block_left",
+          "start_frame": 411662,
+          "end_frame": 411726,
+          "hf_rows": [
+            811
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 28,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 123,
+          "task": "push_red_block_right",
+          "start_frame": 415772,
+          "end_frame": 415840,
+          "hf_rows": [
+            194,
+            200,
+            201,
+            203,
+            204,
+            205,
+            206,
+            207,
+            209
+          ]
+        },
+        {
+          "cluster_idx": 125,
+          "task": "push_blue_block_right",
+          "start_frame": 415878,
+          "end_frame": 415926,
+          "hf_rows": [
+            75,
+            76,
+            78,
+            225,
+            226,
+            227,
+            230,
+            354,
+            359
+          ]
+        }
+      ]
+    },
+    {
+      "chain_id": 29,
+      "length": 2,
+      "clusters": [
+        {
+          "cluster_idx": 126,
+          "task": "lift_blue_block_table",
+          "start_frame": 416715,
+          "end_frame": 416779,
+          "hf_rows": [
+            397,
+            399,
+            406
+          ]
+        },
+        {
+          "cluster_idx": 127,
+          "task": "lift_pink_block_slider",
+          "start_frame": 416802,
+          "end_frame": 416848,
+          "hf_rows": [
+            128,
+            129,
+            130,
+            131,
+            132,
+            133
+          ]
+        }
+      ]
+    }
+  ]
+}
