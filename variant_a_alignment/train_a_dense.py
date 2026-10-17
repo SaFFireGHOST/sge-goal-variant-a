@@ -112,6 +112,13 @@ class SyntheticOrCalvinBehaviorDataset(Dataset):
 
 
 def main():
+    if "--allow_mock" not in sys.argv:
+        raise SystemExit(
+            "MOCK IMPLEMENTATION: surrogate models / simulated rewards, results are "
+            "meaningless. See plan.md (Gate 0 first, real implementation in Phase 2A). "
+            "Pass --allow_mock to run anyway."
+        )
+    sys.argv = [a for a in sys.argv if a != "--allow_mock"]
     args = parse_args()
     set_seed(args.seed)
 

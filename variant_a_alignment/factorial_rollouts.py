@@ -19,6 +19,7 @@ import argparse
 import json
 import logging
 import os
+import sys
 import random
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -56,6 +57,13 @@ def simulate_rollout_reward(mask_idx: int, appearance_idx: int, env_seed: int, t
 
 
 def main():
+    if "--allow_mock" not in sys.argv:
+        raise SystemExit(
+            "MOCK IMPLEMENTATION: surrogate models / simulated rewards, results are "
+            "meaningless. See plan.md (Gate 0 first, real implementation in Phase 2A). "
+            "Pass --allow_mock to run anyway."
+        )
+    sys.argv = [a for a in sys.argv if a != "--allow_mock"]
     args = parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
 

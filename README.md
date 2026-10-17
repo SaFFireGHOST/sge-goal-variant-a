@@ -119,7 +119,27 @@ bash sync_checkpoints.sh --pull-hf
 bash sync_checkpoints.sh --push-modal
 ```
 
-### Step 5.2: Stage A1 — Offline Dense Behavioral Matching Training
+### Gate 0 — Best-of-N headroom (run this first)
+Decides whether Variant A has any signal before any training. Full plan, costs and decision rule: [plan.md](plan.md).
+```bash
+python variant_a_alignment/gate0_select_rows.py --n 150          # local, free
+cd generator
+modal run modal_gate0_generate.py::prefetch                       # CPU: cache FLUX weights
+modal run modal_gate0_generate.py --limit 5                       # L40S pilot
+modal run --detach modal_gate0_generate.py --num-shards 2         # L40S full
+cd ../policy
+modal run modal_calvin_eval.py::run_gate0 --num-shards 1 --limit 5   # T4 pilot
+modal run --detach modal_calvin_eval.py::run_gate0 --num-shards 8    # T4 full
+modal volume get rm-policy-runs eval_method/gate0 ../results/
+cd .. && python variant_a_alignment/gate0_analyze.py --results results/gate0
+```
+
+> **Steps 5.2–5.4 are NOT implemented.** `train_a_dense.py`, `factorial_rollouts.py` and
+> `train_a_flow_dpo.py` are mock scripts (surrogate CNNs, `hash()` rewards, random latents)
+> and refuse to run without `--allow_mock`. The checkpoint in
+> `rm-policy-runs:/variant_a_dense_checkpoints/` is a toy CNN, not a FLUX LoRA.
+
+### Step 5.2: Stage A1 — Offline Dense Behavioral Matching Training (mock)
 Run in detached mode so remote execution survives local disconnects:
 ```bash
 cd ../variant_a_alignment
@@ -134,14 +154,14 @@ modal run modal_train_a_dense.py
 - Mounts code into `/workspace` and loads weights from `/ckpts`.
 - Saves output LoRAs and logs directly to `/runs/variant_a_dense_checkpoints`.
 
-### Step 5.3: Stage A2 — Advantage Preference Rollouts
+### Step 5.3: Stage A2 — Advantage Preference Rollouts (mock)
 ```bash
 # Detached background execution:
 modal run --detach modal_train_a_flow_dpo.py --action rollouts
 ```
 Runs $K_m \times K_a \times K_s$ rollouts inside the remote CALVIN environment and exports preference datasets to `/runs/variant_a_rollouts/`.
 
-### Step 5.4: Stage A2 — Continuous Flow-DPO Optimization
+### Step 5.4: Stage A2 — Continuous Flow-DPO Optimization (mock)
 ```bash
 # Fine-tune Step 3 (Appearance Completion LoRA)
 modal run --detach modal_train_a_flow_dpo.py --action train --stage step3

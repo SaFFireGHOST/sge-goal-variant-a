@@ -118,9 +118,7 @@ def _load_method_row(method_root: Path, hf_row: int) -> Dict:
     }
 
 
-def _load_hf_parquet_rows(
-    parquet_path: Path, row_start: int, row_end: int
-) -> Dict[int, Dict]:
+def _load_hf_parquet_rows(parquet_path: Path, rows: List[int]) -> Dict[int, Dict]:
     import pyarrow.parquet as pq
 
     print(f"[eval_method] reading {parquet_path}")
@@ -129,13 +127,29 @@ def _load_hf_parquet_rows(
     instr = t["edit_instruction"].to_pylist()
     edit_col = t["edited_image"]
     out: Dict[int, Dict] = {}
-    for i in range(row_start, row_end):
+    for i in rows:
         out[i] = {
             "id": ids[i],
             "instruction": instr[i],
             "edited": _decode_hf_image_value(edit_col[i].as_py()),
         }
-    print(f"[eval_method]   loaded HF rows [{row_start}, {row_end})")
+    print(f"[eval_method]   loaded {len(out)} HF rows")
+    return out
+
+
+def _perturb_robot_obs(robot_obs: np.ndarray, hf_row: int, pk: int, std: float) -> np.ndarray:
+    """Start-state perturbation ``pk`` for ``hf_row`` (``pk == 0`` is the original reset).
+
+    CALVIN ``robot_obs`` = [tcp_pos 3, tcp_orn 3, gripper_width 1, arm_joints 7,
+    gripper_action 1]; ``env.reset`` uses the arm joints (idx 7:14). The noise
+    depends only on (row, pk), so every goal variant of a row sees the same
+    perturbations (common random numbers -> paired comparisons).
+    """
+    if pk == 0:
+        return robot_obs
+    rng = np.random.default_rng(100_000 * hf_row + pk)
+    out = np.array(robot_obs, dtype=np.float64, copy=True)
+    out[7:14] += rng.normal(0.0, std, 7)
     return out
 
 
@@ -223,15 +237,38 @@ def main():
                    choices=["both", "text_only", "goal_only"],
                    help="Conditioning mode: both (default), text_only, goal_only.")
 
+    # Gate 0: explicit rows, several goal variants per row, perturbed resets
+    p.add_argument("--rows", default="",
+                   help="Comma-separated 0-indexed HF rows (overrides row_start/row_end).")
+    p.add_argument("--shard_tag", default="",
+                   help="Output filename tag (default: <row_start>_<row_end>).")
+    p.add_argument("--variants", default="",
+                   help="Comma-separated goal variants evaluated per row: sub-folders "
+                        "of --method_dir, or 'gt' for the HF parquet goal.")
+    p.add_argument("--num_perturb", type=int, default=1,
+                   help="Start states per (row, variant); 0 = original reset.")
+    p.add_argument("--perturb_std", type=float, default=0.02,
+                   help="Std (rad) of arm-joint noise for perturbed resets.")
+
     args = p.parse_args()
 
-    if (args.method_dir is None) == (args.hf_parquet_goal is None):
+    variants = [v for v in args.variants.split(",") if v]
+    if variants:
+        if any(v != "gt" for v in variants) and args.method_dir is None:
+            raise SystemExit("--variants other than 'gt' need --method_dir")
+        if "gt" in variants and args.hf_parquet_goal is None:
+            raise SystemExit("--variants gt needs --hf_parquet_goal")
+    elif (args.method_dir is None) == (args.hf_parquet_goal is None):
         raise SystemExit(
             "Specify exactly one of --method_dir or --hf_parquet_goal"
         )
+    if args.rows:
+        rows = [int(r) for r in args.rows.split(",") if r]
+    else:
+        rows = list(range(args.row_start, args.row_end))
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    shard_tag = f"{args.row_start}_{args.row_end}"
+    shard_tag = args.shard_tag or f"{args.row_start}_{args.row_end}"
     per_sample_path = args.output_dir / f"per_sample_{shard_tag}.jsonl"
     sentinel_path = args.output_dir / f"shard_done_{shard_tag}.json"
 
@@ -244,16 +281,21 @@ def main():
           f"HF rows have a CALVIN match")
 
     # -- Load goal sources --------------------------------------------------
-    method_root: Optional[Path] = None
+    # ``None`` = the single goal source given by --method_dir / --hf_parquet_goal.
+    variant_roots: Dict[Optional[str], Optional[Path]] = {}
     parquet_rows: Dict[int, Dict] = {}
-    if args.method_dir is not None:
-        method_root = _find_method_subdir(args.method_dir)
-        print(f"[eval_method] goal source: method_dir={method_root}")
+    if variants:
+        for v in variants:
+            variant_roots[v] = None if v == "gt" else _find_method_subdir(args.method_dir / v)
+        print(f"[eval_method] goal variants: {variants}")
+    elif args.method_dir is not None:
+        variant_roots[None] = _find_method_subdir(args.method_dir)
+        print(f"[eval_method] goal source: method_dir={variant_roots[None]}")
     else:
-        parquet_rows = _load_hf_parquet_rows(
-            args.hf_parquet_goal, args.row_start, args.row_end
-        )
+        variant_roots[None] = None
         print(f"[eval_method] goal source: HF parquet ground truth")
+    if args.hf_parquet_goal is not None and any(r is None for r in variant_roots.values()):
+        parquet_rows = _load_hf_parquet_rows(args.hf_parquet_goal, rows)
 
     # -- Load policy / env / oracle ----------------------------------------
     print(f"[eval_method] loading GR-MG (epoch {args.epoch}) on cuda:{args.device_id}")
@@ -282,7 +324,7 @@ def main():
         "cyan",
     ))
 
-    for hf_row in range(args.row_start, args.row_end):
+    for hf_row in rows:
         if hf_row not in matches_by_row:
             rec = {
                 "hf_row": hf_row,
@@ -299,21 +341,6 @@ def main():
         task = m["task"]
         start_frame = int(m["start_frame"])
 
-        # Goal + instruction
-        if method_root is not None:
-            try:
-                grow = _load_method_row(method_root, hf_row)
-            except FileNotFoundError as e:
-                print(f"[eval_method]   WARN row {hf_row}: {e}; skipping")
-                rec = {"hf_row": hf_row, "success": False,
-                       "skipped": True, "reason": f"method_files_missing"}
-                with open(per_sample_path, "a") as f:
-                    f.write(json.dumps(rec) + "\n")
-                skipped += 1
-                continue
-        else:
-            grow = parquet_rows[hf_row]
-
         try:
             robot_obs, scene_obs = _read_npz_init(val_dir, start_frame)
         except FileNotFoundError as e:
@@ -325,56 +352,78 @@ def main():
             skipped += 1
             continue
 
-        env.reset(robot_obs=robot_obs, scene_obs=scene_obs)
-        model.reset()
-        start_info = env.get_info()
-        goal_rgb = grow["edited"]
-        lang = grow["instruction"]
+        for variant, variant_root in variant_roots.items():
+            # Goal + instruction
+            if variant_root is not None:
+                try:
+                    grow = _load_method_row(variant_root, hf_row)
+                except FileNotFoundError as e:
+                    print(f"[eval_method]   WARN row {hf_row} {variant}: {e}; skipping")
+                    rec = {"hf_row": hf_row, "variant": variant, "success": False,
+                           "skipped": True, "reason": f"method_files_missing"}
+                    with open(per_sample_path, "a") as f:
+                        f.write(json.dumps(rec) + "\n")
+                    skipped += 1
+                    continue
+            else:
+                grow = parquet_rows[hf_row]
 
-        # Conditioning ablation: mask out goal image or language
-        if args.conditioning == "text_only":
-            # Black image (no goal information)
-            ablation_goal = np.zeros_like(goal_rgb)
-        elif args.conditioning == "goal_only":
-            ablation_goal = deepcopy(goal_rgb)
-            lang = ""
-        else:  # "both"
-            ablation_goal = deepcopy(goal_rgb)
+            goal_rgb = grow["edited"]
 
-        success = False
-        steps_used = args.ep_len
-        obs = env.get_obs()
-        for i in range(args.ep_len):
-            action, _ = model.step(obs, [deepcopy(ablation_goal)], [lang])
-            obs, _, _, current_info = env.step(action)
-            if len(task_oracle.get_task_info_for_set(
-                start_info, current_info, {task}
-            )) > 0:
-                success = True
-                steps_used = i + 1
-                break
+            # Conditioning ablation: mask out goal image or language
+            lang = grow["instruction"]
+            if args.conditioning == "text_only":
+                # Black image (no goal information)
+                ablation_goal = np.zeros_like(goal_rgb)
+            elif args.conditioning == "goal_only":
+                ablation_goal = deepcopy(goal_rgb)
+                lang = ""
+            else:  # "both"
+                ablation_goal = deepcopy(goal_rgb)
 
-        success_count += int(success)
-        evaluated += 1
+            for pk in range(args.num_perturb):
+                r_obs = _perturb_robot_obs(robot_obs, hf_row, pk, args.perturb_std)
+                env.reset(robot_obs=r_obs, scene_obs=scene_obs)
+                model.reset()
+                start_info = env.get_info()
 
-        rec = {
-            "hf_row": hf_row,
-            "hf_id": m["hf_id"],
-            "task": task,
-            "instruction_used": lang,
-            "calvin_ann": m["calvin_ann"],
-            "start_frame": start_frame,
-            "end_frame": int(m["end_frame"]),
-            "success": bool(success),
-            "skipped": False,
-            "steps_used": steps_used,
-        }
-        with open(per_sample_path, "a") as f:
-            f.write(json.dumps(rec) + "\n")
+                success = False
+                steps_used = args.ep_len
+                obs = env.get_obs()
+                for i in range(args.ep_len):
+                    action, _ = model.step(obs, [deepcopy(ablation_goal)], [lang])
+                    obs, _, _, current_info = env.step(action)
+                    if len(task_oracle.get_task_info_for_set(
+                        start_info, current_info, {task}
+                    )) > 0:
+                        success = True
+                        steps_used = i + 1
+                        break
 
-        running_sr = success_count / max(1, evaluated)
-        print(f"[eval_method] row {hf_row:4d}  SR={running_sr:.3f}  "
-              f"task={task:30s}  success={int(success)}", flush=True)
+                success_count += int(success)
+                evaluated += 1
+
+                rec = {
+                    "hf_row": hf_row,
+                    "hf_id": m["hf_id"],
+                    "task": task,
+                    "variant": variant,
+                    "perturb": pk,
+                    "instruction_used": lang,
+                    "calvin_ann": m["calvin_ann"],
+                    "start_frame": start_frame,
+                    "end_frame": int(m["end_frame"]),
+                    "success": bool(success),
+                    "skipped": False,
+                    "steps_used": steps_used,
+                }
+                with open(per_sample_path, "a") as f:
+                    f.write(json.dumps(rec) + "\n")
+
+                running_sr = success_count / max(1, evaluated)
+                print(f"[eval_method] row {hf_row:4d}  {variant or '':6s} p{pk}  "
+                      f"SR={running_sr:.3f}  task={task:30s}  success={int(success)}",
+                      flush=True)
 
     summary = {
         "method_name": args.method_name,

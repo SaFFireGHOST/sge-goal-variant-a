@@ -227,12 +227,15 @@ def _enter_workspace_with_calvin_conf():
     link = Path(WORKSPACE) / "calvin"
     if not link.exists():
         os.symlink(CALVIN_REPO, link)
-    eval_link = Path(WORKSPACE) / "evaluate"
-    if not eval_link.exists() and (Path(WORKSPACE) / "gr_mg_evaluate").exists():
-        os.symlink(Path(WORKSPACE) / "gr_mg_evaluate", eval_link)
-    policy_link = Path(WORKSPACE) / "policy"
-    if not policy_link.exists() and (Path(WORKSPACE) / "gr_mg_policy").exists():
-        os.symlink(Path(WORKSPACE) / "gr_mg_policy", policy_link)
+    # ``evaluate`` / ``policy`` are git symlinks; a Windows checkout turns them
+    # into plain text files, which then get uploaded. Replace those with real links.
+    for link_name, target_name in (("evaluate", "gr_mg_evaluate"), ("policy", "gr_mg_policy")):
+        link = Path(WORKSPACE) / link_name
+        target = Path(WORKSPACE) / target_name
+        if link.is_file() and not link.is_symlink():
+            link.unlink()
+        if not link.exists() and target.exists():
+            os.symlink(target, link)
 
     # Ensure policy ckpt & LoRA compatibility symlinks exist inside /ckpts volume if mounted
     if os.path.exists(CKPT_MOUNT):
@@ -1170,6 +1173,11 @@ def eval_method_shard(
     ep_len: int = 360,
     use_hf_parquet_goal: bool = False,
     conditioning: str = "both",
+    rows: str = "",
+    shard_tag: str = "",
+    variants: str = "",
+    num_perturb: int = 1,
+    perturb_std: float = 0.02,
 ):
     """One GPU worker: rolls out HF rows [row_start, row_end) for ``method_name``.
 
@@ -1179,6 +1187,10 @@ def eval_method_shard(
 
     If ``use_hf_parquet_goal`` is True, ignores ``method_name`` lookup in
     /eval_data and uses HF parquet's ``edited_image`` as the goal source.
+
+    Gate 0: ``rows`` (comma list) overrides the row range, ``variants`` evaluates
+    several goal sub-folders of ``/eval_data/<method_name>`` per row ('gt' = HF
+    parquet goal), and ``num_perturb`` > 1 adds perturbed start states.
     """
     _enter_workspace_with_calvin_conf()
 
@@ -1203,7 +1215,19 @@ def eval_method_shard(
         "--ep_len", str(ep_len),
         "--method_name", method_name,
         "--conditioning", conditioning,
+        "--num_perturb", str(num_perturb),
+        "--perturb_std", str(perturb_std),
     ]
+    if rows:
+        cmd += ["--rows", rows]
+    if shard_tag:
+        cmd += ["--shard_tag", shard_tag]
+    if variants:
+        cmd += ["--variants", variants]
+        # Variants mode: method_dir for generated goals, parquet for 'gt'.
+        use_hf_parquet_goal = "gt" in variants.split(",")
+        if any(v != "gt" for v in variants.split(",")):
+            cmd += ["--method_dir", f"{EVAL_DATA_MOUNT}/{method_name}"]
     if use_hf_parquet_goal:
         # Ensure parquet exists in hf_cache.
         parquet_path = "/hf_cache/calvin_test.parquet"
@@ -1213,7 +1237,7 @@ def eval_method_shard(
             urllib.request.urlretrieve(_HF_TEST_URL, parquet_path)
             hf_cache_vol.commit()
         cmd += ["--hf_parquet_goal", parquet_path]
-    else:
+    elif not variants:
         cmd += ["--method_dir", f"{EVAL_DATA_MOUNT}/{method_name}"]
 
     rc = _run(cmd, env={"MESA_GL_VERSION_OVERRIDE": "3.3"})
@@ -1286,6 +1310,76 @@ def run_shard(
         conditioning,
     )
     print(f"[modal] run_shard done: rows [{row_start}, {row_end})")
+
+
+@app.function(volumes=VOLUMES, gpu=None, timeout=60 * 30, cpu=2, memory=4096)
+def export_calvin_subset(mapping_remote: str = "hf_calvin_mapping.json",
+                         out_remote: str = "calvin_subset_task_D_D.tar.gz"):
+    """CPU-only: bundle what local rollouts need from CALVIN-D validation, i.e. the
+    env config (``.hydra/``) and the start-frame ``episode_*.npz`` of every mapped
+    HF row (~70 MB instead of the 29 GB split). Writes ``/runs/<out_remote>``."""
+    import json
+    import tarfile
+
+    val = Path(DATA_MOUNT) / "task_D_D" / "validation"
+    mapping = json.loads((Path(RUNS_MOUNT) / mapping_remote).read_text())
+    frames = sorted({int(m["start_frame"]) for m in mapping["matches"]})
+    out = Path(RUNS_MOUNT) / out_remote
+    with tarfile.open(out, "w:gz") as tar:
+        tar.add(val / ".hydra", arcname="task_D_D/validation/.hydra")
+        for extra in ("statistics.yaml", "ep_start_end_ids.npy"):
+            if (val / extra).exists():
+                tar.add(val / extra, arcname=f"task_D_D/validation/{extra}")
+        for f in frames:
+            name = f"episode_{f:07d}.npz"
+            tar.add(val / name, arcname=f"task_D_D/validation/{name}")
+    runs_vol.commit()
+    print(f"[modal] wrote {out} ({out.stat().st_size / 1e6:.1f} MB, {len(frames)} frames)")
+
+
+@app.local_entrypoint()
+def run_gate0(
+    rows_json: str = "../variant_a_alignment/gate0_rows.json",
+    method_name: str = "gate0",
+    variants: str = "m0a0,m0a1,m1a0,m1a1,m2a0,m2a1,gt",
+    num_shards: int = 8,
+    num_perturb: int = 3,
+    perturb_std: float = 0.02,
+    limit: int = 0,
+    run_tag: str = "gate0",
+    ep_len: int = 360,
+):
+    """Gate 0 rollouts: every goal variant x ``num_perturb`` start states for
+    each row in ``rows_json``. Results: ``/runs/eval_method/<run_tag>/``."""
+    import json
+
+    rows = json.loads(Path(rows_json).read_text())["rows"]
+    if limit:
+        rows = rows[:limit]
+    shards = [rows[i::num_shards] for i in range(num_shards)]
+    shards = [s for s in shards if s]
+    n_roll = len(rows) * len(variants.split(",")) * num_perturb
+    print(f"[modal] run_gate0 rows={len(rows)} variants={variants} "
+          f"perturb={num_perturb} -> {n_roll} rollouts on {len(shards)} T4 shards")
+    args_list = [
+        (method_name, 0, 0, run_tag,
+         "gr_mg/epoch=47-step=83712.ckpt",
+         "policy/config/train.json",
+         "hf_calvin_mapping.json",
+         "task_D_D",
+         47,
+         ep_len,
+         False,
+         "both",
+         ",".join(map(str, s)),
+         f"shard{i:02d}",
+         variants,
+         num_perturb,
+         perturb_std)
+        for i, s in enumerate(shards)
+    ]
+    list(eval_method_shard.starmap(args_list))
+    print(f"[modal] run_gate0 finished -> rm-policy-runs:/eval_method/{run_tag}/")
 
 
 # ---------------------------------------------------------------------------

@@ -39,3 +39,7 @@ nohup.out
 *.tar
 *.tar.gz
 lgie-eval-data
+
+# Gate 0 local data and outputs
+data/
+results/
