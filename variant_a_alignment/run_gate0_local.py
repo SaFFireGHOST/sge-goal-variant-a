@@ -80,8 +80,15 @@ def main():
     args.out.mkdir(parents=True, exist_ok=True)
     log_dir = args.out / "logs"
     log_dir.mkdir(exist_ok=True)
+    # Same PYTHONPATH as modal_calvin_eval._run: the workspace must come first so
+    # ``import policy`` resolves to policy/policy -> gr_mg_policy, not the repo's
+    # policy/ folder. PYTHONNOUSERSITE keeps ~/.local packages out of the env.
+    eval_paths = f"{WORKSPACE}:{WORKSPACE}/evaluate:{WORKSPACE}/gr_mg_evaluate"
+    pp = os.environ.get("PYTHONPATH", "")
     env = dict(os.environ, CUDA_VISIBLE_DEVICES=args.gpu,
-               MESA_GL_VERSION_OVERRIDE="3.3", PYOPENGL_PLATFORM="egl")
+               MESA_GL_VERSION_OVERRIDE="3.3", PYOPENGL_PLATFORM="egl",
+               PYTHONNOUSERSITE="1",
+               PYTHONPATH=f"{eval_paths}:{pp}" if pp else eval_paths)
 
     n_roll = len(rows) * len(args.variants.split(",")) * args.num_perturb
     print(f"[gate0-local] {len(rows)} rows -> {n_roll} rollouts on {len(shards)} workers "

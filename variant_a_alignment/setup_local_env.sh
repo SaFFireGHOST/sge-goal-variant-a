@@ -10,6 +10,7 @@ CALVIN_DIR="${1:-$HOME/calvin}"
 ENV_NAME="${ENV_NAME:-gate0}"
 
 eval "$(conda shell.bash hook)"
+export PYTHONNOUSERSITE=1   # keep ~/.local packages out of the env
 conda create -y -n "$ENV_NAME" python=3.10
 conda activate "$ENV_NAME"
 
@@ -22,6 +23,7 @@ pip install scipy pillow pyarrow pandas tqdm termcolor matplotlib "imageio[ffmpe
     flamingo-pytorch einops timm "git+https://github.com/openai/CLIP.git" modal
 
 pip install "setuptools==65.5.0" "wheel==0.38.4"
+pip install "pip<24.1"   # gym 0.21 metadata is rejected by pip>=24.1
 pip install --no-build-isolation "gym==0.21.0"
 
 if [ ! -d "$CALVIN_DIR" ]; then
